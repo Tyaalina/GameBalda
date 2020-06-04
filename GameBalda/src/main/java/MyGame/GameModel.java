@@ -60,14 +60,14 @@ public class GameModel {
         // Создаем двух игроков
         Player p;
 
-        p = new Player(getGameField(), "0");
+        p = new Player(getGameField(), "Игрок1");
         p.setGame(this);
         p.addPlayerActionListener(observer); // "Следим" за игроком
         _playerList.add(p);
         _activePlayer = 0;
         _rating.getRating().put(p,0);
 
-        p = new Player(getGameField(), "1");
+        p = new Player(getGameField(), "Игрок2");
         p.setGame(this);
         p.addPlayerActionListener(observer); // "Следим" за игроком
         _playerList.add(p);
