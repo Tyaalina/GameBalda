@@ -12,9 +12,8 @@ public class Alphabet {
 
     // ---------------------- Заполняем алфавит буквами -----------------------------
 
-    private void fillAlphabet(){
-        try(FileReader reader = new FileReader("D:\\ООП\\вычислительная модель\\alphabet.txt"))
-        {
+    private void fillAlphabet() {
+        try (FileReader reader = new FileReader("D:\\ООП\\вычислительная модель\\alphabet.txt")) {
             BufferedReader _reader = new BufferedReader(reader);
 
             String line;
@@ -22,20 +21,19 @@ public class Alphabet {
             while ((line = _reader.readLine()) != null) {
                 _alphabet.add(new Letter(line));
             }
-        }
-        catch(
-                IOException ex){
+        } catch (
+                IOException ex) {
 
             System.out.println(ex.getMessage());
         }
     }
 
     // ---------------------- Конструктор -----------------------------
-    public Alphabet(){
+    public Alphabet() {
         fillAlphabet();
     }
 
-    public Alphabet(Letter _activeLetter){
+    public Alphabet(Letter _activeLetter) {
 
         fillAlphabet();
         activLetter = _activeLetter;
@@ -43,11 +41,11 @@ public class Alphabet {
 
     // ---------------------- Активная буква -----------------------------
 
-    public void setActivateLetter(Letter letter){
+    public void setActivateLetter(Letter letter) {
         activLetter = letter;
     }
 
-    public Letter getActiveLetter(){
+    public Letter getActiveLetter() {
         return activLetter;
     }
 }

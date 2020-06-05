@@ -6,7 +6,7 @@ package MyGame;
  */
 public class CellFactory {
 
-    public Cell createCell(){
+    public Cell createCell() {
         return new Cell();
     }
 }

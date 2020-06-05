@@ -157,8 +157,8 @@ public class GameModelTest {
 
         expectedEvents.add(EVENT.PLAYER_EXCHANGED);
 
-        game.getGameField().getCellPool().get(0).setLetter(new Letter("к"));
-        game.getGameField().getCellPool().get(1).setLetter(new Letter("о"));
+        game.getGameField().getCellPool().get(0).setLetterAtStartWord(new Letter("к"));
+        game.getGameField().getCellPool().get(1).setLetterAtStartWord(new Letter("о"));
 
         //Выбираем букву
         game.getActivePlayer().chooseLetter(new Letter("т"));
@@ -186,8 +186,8 @@ public class GameModelTest {
 
         expectedEvents.add(EVENT.PLAYER_EXCHANGED);
 
-        game.getGameField().getCellPool().get(0).setLetter(new Letter("к"));
-        game.getGameField().getCellPool().get(1).setLetter(new Letter("о"));
+        game.getGameField().getCellPool().get(0).setLetterAtStartWord(new Letter("к"));
+        game.getGameField().getCellPool().get(1).setLetterAtStartWord(new Letter("о"));
 
         //Выбираем букву
         game.getActivePlayer().chooseLetter(new Letter("т"));
@@ -242,8 +242,8 @@ public class GameModelTest {
 
         game.getGameRating().getRating().put(game.getPlayerList().get(1),3);
 
-        game.getGameField().getCellPool().get(0).setLetter(new Letter("к"));
-        game.getGameField().getCellPool().get(1).setLetter(new Letter("о"));
+        game.getGameField().getCellPool().get(0).setLetterAtStartWord(new Letter("к"));
+        game.getGameField().getCellPool().get(1).setLetterAtStartWord(new Letter("о"));
 
         //Выбираем букву
         game.getActivePlayer().chooseLetter(new Letter("т"));

@@ -12,9 +12,8 @@ public class Dictionary {
 
     // ---------------------- Заполняем словарь словами -----------------------------
 
-    private void fillInDictionary(){
-        try(FileReader reader = new FileReader("D:\\ООП\\вычислительная модель\\dictionary.txt"))
-        {
+    private void fillInDictionary() {
+        try (FileReader reader = new FileReader("D:\\ООП\\вычислительная модель\\dictionary.txt")) {
             BufferedReader _reader = new BufferedReader(reader);
 
             String line;
@@ -22,9 +21,8 @@ public class Dictionary {
             while ((line = _reader.readLine()) != null) {
                 _dictionary.add(line);
             }
-        }
-        catch(
-                IOException ex){
+        } catch (
+                IOException ex) {
 
             System.out.println(ex.getMessage());
         }
@@ -32,32 +30,32 @@ public class Dictionary {
 
     // ---------------------- Конструктор -----------------------------
 
-    public Dictionary(){
+    public Dictionary() {
         fillInDictionary();
     }
 
     // ---------------------- Генерация случайного слова заданого размера -----------------------------
-    public String generatingRandomWord(int lenght){
+    public String generatingRandomWord(int lenght) {
         String _word = new String();
         ArrayList<String> wordsSizeN = new ArrayList<String>();
 
         //Формируем список слов заданного размера
-        for (String word: _dictionary){
-            if (word.length() == lenght){
+        for (String word : _dictionary) {
+            if (word.length() == lenght) {
                 wordsSizeN.add(word);
             }
         }
 
         //Выбираем рандомное слово из списка
-        if (wordsSizeN.size() != 0){
-            _word = wordsSizeN.get((int)(Math.random()*wordsSizeN.size()));
+        if (wordsSizeN.size() != 0) {
+            _word = wordsSizeN.get((int) (Math.random() * wordsSizeN.size()));
         }
 
         return _word;
     }
 
     // ---------------------- Наличие слова в словаре -----------------------------
-    public boolean isInDictionary(String word){
+    public boolean isInDictionary(String word) {
         return _dictionary.contains(word);
     }
 }

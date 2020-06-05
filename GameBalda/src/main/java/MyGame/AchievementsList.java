@@ -1,4 +1,5 @@
 package MyGame;
+
 import MyEvents.AchievementsListEvent;
 import MyEvents.AchievementsListListener;
 import org.jetbrains.annotations.NotNull;
@@ -11,60 +12,61 @@ public class AchievementsList {
     // ----------------------- Формирование счёта ------------------------------
     HashMap<Player, Integer> _rating = new HashMap<>();
 
-    public HashMap<Player, Integer> getRating(){
+    public HashMap<Player, Integer> getRating() {
         return _rating;
     }
 
-    private void updateGameRating(int score,Player activePlayer){
+    private void updateGameRating(int score, Player activePlayer) {
         score = score + _rating.get(activePlayer);
-        _rating.put(activePlayer,score);
+        _rating.put(activePlayer, score);
     }
+
     // ----------------------- Список используемых слов ------------------------------
     HashMap<String, Player> _usedWord = new HashMap<>();
 
-    public HashMap<String, Player> getUsedWord(){
+    public HashMap<String, Player> getUsedWord() {
         return _usedWord;
     }
 
-    public void addUsedWord(String word,Player activePlayer){
-        _usedWord.put(word,activePlayer);
+    public void addUsedWord(String word, Player activePlayer) {
+        _usedWord.put(word, activePlayer);
     }
 
-    public boolean isUsedWord(String word){
+    public boolean isUsedWord(String word) {
         return (!(_usedWord.get(word) == null));
     }
+
     // ----------------------- Формирование листа достижений ------------------------------
-    public void updateAchievementsList(@NotNull String word, Player activePlayer){
+    public void updateAchievementsList(@NotNull String word, Player activePlayer) {
         int size = word.length();
 
-        updateGameRating(size,activePlayer);
-        addUsedWord(word,activePlayer);
+        updateGameRating(size, activePlayer);
+        addUsedWord(word, activePlayer);
     }
+
     // ----------------------- Добавление слова в счёт ------------------------------
-    public void addWordInAchievementsList(String word,Player activePlayer){
+    public void addWordInAchievementsList(String word, Player activePlayer) {
         //Слово было использовано ранее
-        if(isUsedWord(word)){
+        if (isUsedWord(word)) {
             //Генерация события
             wordAlreadyUsed();
         }
         //наличие слова в словаре
-        else if (!_dictionary.isInDictionary(word)){
+        else if (!_dictionary.isInDictionary(word)) {
             //Генерация события
             wordInDictionary();
-        }
-        else
-            {
+        } else {
             updateAchievementsList(word, activePlayer);
 
-                //Генерация события
-                wordAddInAchievementsList();
-            }
+            //Генерация события
+            wordAddInAchievementsList();
+        }
 
     }
 
     // ---------------------- Порождает события -----------------------------
 
-    private ArrayList <AchievementsListListener> _listener = new ArrayList<AchievementsListListener>();
+    private ArrayList<AchievementsListListener> _listener = new ArrayList<AchievementsListListener>();
 
     // Присоединяет слушателя
     public void addAchievementsListListener(AchievementsListListener l) {

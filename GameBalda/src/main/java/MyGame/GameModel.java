@@ -9,36 +9,44 @@ public class GameModel {
     // -------------------------------- Игровой счёт -------------------------------------
     AchievementsList _rating;
 
-    public AchievementsList getGameRating (){ return _rating;}
-    // -------------------------------- Алфавит -------------------------------------
-    private Alphabet alphabet;
+    public AchievementsList getGameRating() {
+        return _rating;
+    }
 
-    public Alphabet getAlphabet(){
+    // -------------------------------- Алфавит -------------------------------------
+    private final Alphabet alphabet;
+
+    public Alphabet getAlphabet() {
         return alphabet;
     }
-    // -------------------------------- Словарь -------------------------------------
-    private Dictionary _dictionary;
-    // -------------------------------- Поле -------------------------------------
-    private GameField gameField;
 
-    public GameField getGameField(){
+    // -------------------------------- Словарь -------------------------------------
+    private final Dictionary _dictionary;
+    // -------------------------------- Поле -------------------------------------
+    private final GameField gameField;
+
+    public GameField getGameField() {
         return gameField;
     }
+
     // -------------------------------- Игроки -----------------------------------
-    private ArrayList<Player> _playerList = new ArrayList<>();
+    private final ArrayList<Player> _playerList = new ArrayList<>();
 
     //дефолтный игрок поля для слов сгенерированных полем
-    private Player defaultPlayer = new Player("default");
+    private final Player defaultPlayer = new Player("default");
 
     private int _activePlayer;
 
-    public Player getActivePlayer(){
+    public Player getActivePlayer() {
         return _playerList.get(_activePlayer);
     }
 
-    public ArrayList<Player> getPlayerList(){ return _playerList;}
+    public ArrayList<Player> getPlayerList() {
+        return _playerList;
+    }
+
     // -------------------------------- Конструктор -------------------------------------
-    public GameModel(){
+    public GameModel() {
         //Создаём слушателей
         PlayerAndFieldObserver observer = new PlayerAndFieldObserver();
         //Создаём игровой счёт
@@ -65,31 +73,29 @@ public class GameModel {
         p.addPlayerActionListener(observer); // "Следим" за игроком
         _playerList.add(p);
         _activePlayer = 0;
-        _rating.getRating().put(p,0);
+        _rating.getRating().put(p, 0);
 
         p = new Player(getGameField(), "Игрок2");
         p.setGame(this);
         p.addPlayerActionListener(observer); // "Следим" за игроком
         _playerList.add(p);
-        _rating.getRating().put(p,0);
+        _rating.getRating().put(p, 0);
     }
     // ---------------------- Порождение обстановки на поле ---------------------
 
     private CellFactory _cellFactory = new CellFactory();
 
-    private void generateField(){
+    private void generateField() {
 
         getGameField().clear();
         getGameField().setSize(5);
-        for(int row = 1; row <= getGameField().height(); row++)
-        {
-            for(int col = 1; col <= getGameField().width(); col++)
-            {
+        for (int row = 1; row <= getGameField().height(); row++) {
+            for (int col = 1; col <= getGameField().width(); col++) {
                 getGameField().setCell(new Point(col, row), _cellFactory.createCell());
             }
         }
 
-        for(Cell cell: getGameField().getCellPool()){
+        for (Cell cell : getGameField().getCellPool()) {
             int positionX = cell.getPosition().x;
             int positionY = cell.getPosition().y;
 
@@ -97,27 +103,27 @@ public class GameModel {
 
             cell.setStatus(Status.FREE);
 
-            if(positionX != getGameField().getSize()) {
-                cell.setNeighbor(getGameField().getCellPool().get(positionInCellPool+1));
+            if (positionX != getGameField().getSize()) {
+                cell.setNeighbor(getGameField().getCellPool().get(positionInCellPool + 1));
             }
 
-            if(positionX != 1) {
-                cell.setNeighbor(getGameField().getCellPool().get(positionInCellPool-1));
+            if (positionX != 1) {
+                cell.setNeighbor(getGameField().getCellPool().get(positionInCellPool - 1));
             }
 
-            if(positionY != getGameField().getSize()) {
-                cell.setNeighbor(getGameField().getCellPool().get(positionInCellPool+getGameField().height()));
+            if (positionY != getGameField().getSize()) {
+                cell.setNeighbor(getGameField().getCellPool().get(positionInCellPool + getGameField().height()));
             }
 
-            if(positionY != 1) {
-                cell.setNeighbor(getGameField().getCellPool().get(positionInCellPool-getGameField().height()));
+            if (positionY != 1) {
+                cell.setNeighbor(getGameField().getCellPool().get(positionInCellPool - getGameField().height()));
             }
         }
     }
 
     // ----------------------------- Игровой процесс ----------------------------
 
-    public void start(){
+    public void start() {
 
         // Генерируем поле
         generateField();
@@ -127,20 +133,20 @@ public class GameModel {
         this.getGameField().setWord(startWord);
 
         //Добавить слово в список использованных
-        _rating.addUsedWord(startWord,defaultPlayer);
+        _rating.addUsedWord(startWord, defaultPlayer);
 
         // Передаем ход первому игроку
-        _activePlayer = _playerList.size()-1;
+        _activePlayer = _playerList.size() - 1;
 
         exchangePlayer();
     }
 
-    private void exchangePlayer(){
+    private void exchangePlayer() {
         //Проверяем поле на заполнение
-        if(!gameField.isFull()){
+        if (!gameField.isFull()) {
             // Сменить игрока
             _activePlayer++;
-            if(_activePlayer >= _playerList.size())     _activePlayer = 0;
+            if (_activePlayer >= _playerList.size()) _activePlayer = 0;
 
             //Деактивируем клетки на поле
             this.getGameField().disableAllCells();
@@ -187,7 +193,7 @@ public class GameModel {
 
         @Override
         public void playerFinishHisStep(PlayerActionEvent e) {
-            _rating.getRating().put(_playerList.get(_activePlayer),_playerList.get(_activePlayer).getRatingOfActivePlayer().getRating().get(_playerList.get(_activePlayer)));
+            _rating.getRating().put(_playerList.get(_activePlayer), _playerList.get(_activePlayer).getRatingOfActivePlayer().getRating().get(_playerList.get(_activePlayer)));
             exchangePlayer();
         }
 
@@ -230,8 +236,7 @@ public class GameModel {
             if (evenScore) {
                 //Генерируем событие
                 deadHeat();
-            }
-            else {
+            } else {
                 Player winner = getActivePlayer();
                 int maxScore = 0;
 
@@ -268,9 +273,8 @@ public class GameModel {
 
         GameEvent event = new GameEvent(this);
         event.setPlayer(winner);
-        for (Object listner : _listenerList)
-        {
-            ((GameListener)listner).gameFinished(event);
+        for (Object listner : _listenerList) {
+            ((GameListener) listner).gameFinished(event);
         }
     }
 
@@ -278,9 +282,8 @@ public class GameModel {
     protected void deadHeat() {
 
         GameEvent event = new GameEvent(this);
-        for (Object listner : _listenerList)
-        {
-            ((GameListener)listner).deadHeat(event);
+        for (Object listner : _listenerList) {
+            ((GameListener) listner).deadHeat(event);
         }
     }
 
@@ -289,12 +292,10 @@ public class GameModel {
 
         GameEvent event = new GameEvent(this);
         event.setPlayer(p);
-        for (Object listner : _listenerList)
-        {
-            ((GameListener)listner).playerExchanged(event);
+        for (Object listner : _listenerList) {
+            ((GameListener) listner).playerExchanged(event);
         }
     }
-
 
 
 }

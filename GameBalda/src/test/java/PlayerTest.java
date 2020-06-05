@@ -138,7 +138,7 @@ public class PlayerTest {
         expectedEvents.add(EVENT.LETTER_IS_ACTIVE);
 
         //Создание поля
-        Cell cell = new Cell(Status.FREE);
+        Cell cell = new Cell(new Letter("в"));
         game.getGameField().setCell(new Point(1,1), cell);
 
         Cell cell1 = new Cell(Status.FREE);
@@ -174,8 +174,7 @@ public class PlayerTest {
         Cell cell = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(1,1), cell);
 
-        Cell cell1 = new Cell(Status.FREE);
-        cell1.setLetter(new Letter("и"));
+        Cell cell1 = new Cell(new Letter("и"));
         game.getGameField().setCell(new Point(1,2), cell1);
 
         Cell cell2 = new Cell(Status.FREE);
@@ -214,15 +213,13 @@ public class PlayerTest {
         Cell cell2 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(1,3), cell2);
 
-        Cell cell3 = new Cell(Status.FREE);
-        cell3.setLetter(new Letter("к"));
+        Cell cell3 = new Cell(new Letter("к"));
         game.getGameField().setCell(new Point(2,1), cell3);
 
         Cell cell4 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(2,2), cell4);
 
-        Cell cell5 = new Cell(Status.FREE);
-        cell5.setLetter(new Letter("т"));
+        Cell cell5 = new Cell(new Letter("т"));
         game.getGameField().setCell(new Point(2,3), cell5);
 
         Cell cell6 = new Cell(Status.FREE);
@@ -309,15 +306,13 @@ public class PlayerTest {
         Cell cell2 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(1,3), cell2);
 
-        Cell cell3 = new Cell(Status.FREE);
-        cell3.setLetter(new Letter("к"));
+        Cell cell3 = new Cell(new Letter("к"));
         game.getGameField().setCell(new Point(2,1), cell3);
 
         Cell cell4 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(2,2), cell4);
 
-        Cell cell5 = new Cell(Status.FREE);
-        cell5.setLetter(new Letter("т"));
+        Cell cell5 = new Cell(new Letter("т"));
         game.getGameField().setCell(new Point(2,3), cell5);
 
         Cell cell6 = new Cell(Status.FREE);
@@ -383,13 +378,15 @@ public class PlayerTest {
         expectedEvents.add(EVENT.LETTER_IS_ACTIVE);
 
         //Устанавливаем букву
-        player.chooseCell(cell7);
+        player.chooseCell(cell6);
         expectedEvents.add(EVENT.LETTER_ADD_ON_FIELD);
 
-        assert(player.getCellWithSettingLetter().equal(cell7));
-        assert(cell7.getLetter().equal(new Letter("а")));
+        Letter letter = new Letter("а");
+
+        assert(player.getCellWithSettingLetter().equal(cell6));
+        assert(cell6.getLetter().equal(letter));
         assert(cell4.isEmpty() && cell4.getStatus() == Status.FREE  );
-        assert(game.getGameField().getWord() == "");
+        assert(game.getGameField().getWord().equals(""));
 
         assertEquals(events, expectedEvents);
     }
@@ -411,15 +408,13 @@ public class PlayerTest {
         Cell cell2 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(1,3), cell2);
 
-        Cell cell3 = new Cell(Status.FREE);
-        cell3.setLetter(new Letter("к"));
+        Cell cell3 = new Cell(new Letter("к"));
         game.getGameField().setCell(new Point(2,1), cell3);
 
         Cell cell4 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(2,2), cell4);
 
-        Cell cell5 = new Cell(Status.FREE);
-        cell5.setLetter(new Letter("т"));
+        Cell cell5 = new Cell(new Letter("т"));
         game.getGameField().setCell(new Point(2,3), cell5);
 
         Cell cell6 = new Cell(Status.FREE);
@@ -506,15 +501,13 @@ public class PlayerTest {
         Cell cell2 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(1,3), cell2);
 
-        Cell cell3 = new Cell(Status.FREE);
-        cell3.setLetter(new Letter("к"));
+        Cell cell3 = new Cell(new Letter("к"));
         game.getGameField().setCell(new Point(2,1), cell3);
 
         Cell cell4 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(2,2), cell4);
 
-        Cell cell5 = new Cell(Status.FREE);
-        cell5.setLetter(new Letter("т"));
+        Cell cell5 = new Cell(new Letter("т"));
         game.getGameField().setCell(new Point(2,3), cell5);
 
         Cell cell6 = new Cell(Status.FREE);
@@ -602,15 +595,13 @@ public class PlayerTest {
         Cell cell2 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(1,3), cell2);
 
-        Cell cell3 = new Cell(Status.FREE);
-        cell3.setLetter(new Letter("ш"));
+        Cell cell3 = new Cell(new Letter("ш"));
         game.getGameField().setCell(new Point(2,1), cell3);
 
         Cell cell4 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(2,2), cell4);
 
-        Cell cell5 = new Cell(Status.FREE);
-        cell5.setLetter(new Letter("ш"));
+        Cell cell5 = new Cell(new Letter("ш"));
         game.getGameField().setCell(new Point(2,3), cell5);
 
         Cell cell6 = new Cell(Status.FREE);
@@ -696,15 +687,13 @@ public class PlayerTest {
         Cell cell2 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(1,3), cell2);
 
-        Cell cell3 = new Cell(Status.FREE);
-        cell3.setLetter(new Letter("ш"));
+        Cell cell3 = new Cell(new Letter("ш"));
         game.getGameField().setCell(new Point(2,1), cell3);
 
         Cell cell4 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(2,2), cell4);
 
-        Cell cell5 = new Cell(Status.FREE);
-        cell5.setLetter(new Letter("ш"));
+        Cell cell5 = new Cell(new Letter("ш"));
         game.getGameField().setCell(new Point(2,3), cell5);
 
         Cell cell6 = new Cell(Status.FREE);
@@ -790,8 +779,7 @@ public class PlayerTest {
         Cell cell2 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(1,3), cell2);
 
-        Cell cell3 = new Cell(Status.FREE);
-        cell3.setLetter(new Letter("ш"));
+        Cell cell3 = new Cell(new Letter("ш"));
         game.getGameField().setCell(new Point(2,1), cell3);
 
         Cell cell4 = new Cell(Status.FREE);
@@ -806,8 +794,7 @@ public class PlayerTest {
         Cell cell7 = new Cell(Status.FREE);
         game.getGameField().setCell(new Point(3,2), cell7);
 
-        Cell cell8 = new Cell(Status.FREE);
-        cell8.setLetter(new Letter("ш"));
+        Cell cell8 = new Cell(new Letter("ш"));
         game.getGameField().setCell(new Point(3,3), cell8);
 
         //Присоединение соседей

@@ -102,6 +102,9 @@ public class CellTest {
 
     @Test
     public void test_Cell_disable_busy(){
+        Cell cellNeighbour = new Cell(new Letter("n"));
+
+        cell.setNeighbor(cellNeighbour);
         cell.setStatus(Status.FREE);
         cell.setLetter(new Letter("a"));
         cell.activate();
@@ -120,6 +123,9 @@ public class CellTest {
 
     @Test
     public void test_Cell_setLetter_true(){
+        Cell cellNeighbour = new Cell(new Letter("n"));
+        cell.setNeighbor(cellNeighbour);
+
         Letter letter = new Letter("n");
         cell.setStatus(Status.FREE);
         boolean result = cell.setLetter(letter);
@@ -144,6 +150,9 @@ public class CellTest {
 
     @Test
     public void test_Cell_isEmpty_false(){
+        Cell cellNeighbour = new Cell(new Letter("n"));
+        cell.setNeighbor(cellNeighbour);
+
         Letter letter = new Letter("n");
         cell.setStatus(Status.FREE);
         cell.setLetter(letter);

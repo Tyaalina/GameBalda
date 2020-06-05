@@ -18,19 +18,19 @@ public class Player {
         return _name;
     }
 
-    public Player (String name) {
+    public Player(String name) {
         _name = name;
-        _rating.getRating().put(this,0);
+        _rating.getRating().put(this, 0);
     }
 
     // ----------------------- Устанавливаем связь с полем -----------------------
     GameField _field;
     AchievementsList _rating = new AchievementsList();
 
-    public Player (GameField field, String name) {
+    public Player(GameField field, String name) {
         _field = field;
         _name = name;
-        _rating.getRating().put(this,0);
+        _rating.getRating().put(this, 0);
         _field.addGameFieldListener(new PlayerObserverGameField());
         _rating.addAchievementsListListener(new PlayerObserverAchievementsListListener());
     }
@@ -38,7 +38,7 @@ public class Player {
     // ----------------------- Устанавливаем связь с игрой -----------------------
     GameModel _gameModel;
 
-    public void setGame(GameModel game){
+    public void setGame(GameModel game) {
         _gameModel = game;
     }
 
@@ -49,13 +49,15 @@ public class Player {
         _activeLetter = l;
     }
 
-    public Letter getActiveLetter(){return _activeLetter;}
+    public Letter getActiveLetter() {
+        return _activeLetter;
+    }
 
     private void removeActiveLetter() {
         _activeLetter = null;
     }
 
-    public void chooseLetter (Letter letter){
+    public void chooseLetter(Letter letter) {
         _gameModel.getAlphabet().setActivateLetter(letter);
 
         setActiveLetter(letter);
@@ -71,11 +73,13 @@ public class Player {
         _сellWithSettingLetter = c;
     }
 
-    public Cell getCellWithSettingLetter(){ return this._сellWithSettingLetter;}
+    public Cell getCellWithSettingLetter() {
+        return this._сellWithSettingLetter;
+    }
 
-    public void chooseCell (@NotNull Cell cell){
+    public void chooseCell(@NotNull Cell cell) {
         //Если клетка пустая или с уже установленной активной буквой и активная буква выбрана
-        if ((cell.isEmpty()|| cell.equal(_сellWithSettingLetter)) && _activeLetter != null) {
+        if ((cell.isEmpty() || cell.equal(_сellWithSettingLetter)) && _activeLetter != null) {
 
             //Получаем список активных клеток на поле
             ArrayList<Cell> activeCell = _gameModel.getGameField().getAllActiveCell();
@@ -104,11 +108,10 @@ public class Player {
             removeActiveLetter();
         }
         //Если в выбранной клетке есть буква и активная буква уже установлена на поле
-        else if(!cell.isEmpty() && _сellWithSettingLetter.getPosition() != null){
+        else if (!cell.isEmpty() && _сellWithSettingLetter.getPosition() != null) {
             //Добавляем клетку к формируемому слову
             _gameModel.getGameField().addCellToWord(cell);
-        }
-        else {
+        } else {
             // Генерируем событие
             letterIsNotAddOnGameField();
         }
@@ -116,13 +119,15 @@ public class Player {
 
     // ----------------------- Завершить формирование слова -----------------
 
-    public void completeWord(){
-        if(_gameModel.getGameField().getAllActiveCell().contains(_сellWithSettingLetter)){
-            _rating.addWordInAchievementsList(_gameModel.getGameField().getWord(),this);
+    public void completeWord() {
+        if (_gameModel.getGameField().getAllActiveCell().contains(_сellWithSettingLetter)) {
+            _rating.addWordInAchievementsList(_gameModel.getGameField().getWord(), this);
         }
     }
 
-    public AchievementsList getRatingOfActivePlayer(){ return _rating;}
+    public AchievementsList getRatingOfActivePlayer() {
+        return _rating;
+    }
 
     // ------------------------- Реагируем на действия поля ------------------
 
@@ -177,7 +182,7 @@ public class Player {
 
     // ---------------------- Порождает события -----------------------------
 
-    private ArrayList <PlayerActionListener> _listener = new ArrayList<PlayerActionListener>();
+    private ArrayList<PlayerActionListener> _listener = new ArrayList<PlayerActionListener>();
 
     // Присоединяет слушателя
     public void addPlayerActionListener(PlayerActionListener l) {
@@ -204,123 +209,123 @@ public class Player {
         }
     }
 
-        // Оповещает слушателей о событии добавление буквы на поле
-        protected void letterAddOnGameField() {
-            //Для каждого слушателя
-            for (PlayerActionListener listener : _listener) {
-                //Cоздаём действие
-                PlayerActionEvent event = new PlayerActionEvent(this);
+    // Оповещает слушателей о событии добавление буквы на поле
+    protected void letterAddOnGameField() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
 
-                //Присоединяем действие к метке
-                event.setPlayer(this);
+            //Присоединяем действие к метке
+            event.setPlayer(this);
 
-                //Оповещаем
-                listener.letterAddOnGameField(event);
-            }
-        }
-
-        // Оповещает слушателей о событии не добавлении буквы на поле
-        protected void letterIsNotAddOnGameField() {
-            //Для каждого слушателя
-            for (PlayerActionListener listener : _listener) {
-                //Cоздаём действие
-                PlayerActionEvent event = new PlayerActionEvent(this);
-
-                //Присоединяем действие к метке
-                event.setPlayer(this);
-
-                //Оповещаем
-                listener.letterIsNotAddOnGameField(event);
-            }
-        }
-
-        // Оповещает слушателей о событии о добавлении буквы к слову
-        protected void cellAddInWord() {
-            //Для каждого слушателя
-            for (PlayerActionListener listener : _listener) {
-                //Cоздаём действие
-                PlayerActionEvent event = new PlayerActionEvent(this);
-
-                //Присоединяем действие к метке
-                event.setPlayer(this);
-
-                //Оповещаем
-                listener.cellAddInWord(event);
-            }
-        }
-
-        // Оповещает слушателей о событии о невозможности добавления буквы к слову
-        protected void cellNotAddInWord() {
-            //Для каждого слушателя
-            for (PlayerActionListener listener : _listener) {
-                //Cоздаём действие
-                PlayerActionEvent event = new PlayerActionEvent(this);
-
-                //Присоединяем действие к метке
-                event.setPlayer(this);
-
-                //Оповещаем
-                listener.cellNotAddInWord(event);
-            }
-        }
-
-        // Оповещает слушателей о событии о удалении буквы из слова
-        protected void cellRemoveInWord() {
-            //Для каждого слушателя
-            for (PlayerActionListener listener : _listener) {
-                //Cоздаём действие
-                PlayerActionEvent event = new PlayerActionEvent(this);
-
-                //Присоединяем действие к метке
-                event.setPlayer(this);
-
-                //Оповещаем
-                listener.cellRemoveInWord(event);
-            }
-        }
-
-        // Оповещает слушателей о событии о завершении хода игрока
-        protected void playerFinishHisStep() {
-            //Для каждого слушателя
-            for (PlayerActionListener listener : _listener) {
-                //Cоздаём действие
-                PlayerActionEvent event = new PlayerActionEvent(this);
-
-                //Присоединяем действие к метке
-                event.setPlayer(this);
-
-                //Оповещаем
-                listener.playerFinishHisStep(event);
-            }
-        }
-
-        // Оповещает слушателей о событии об отсутствии слова в словаре
-        protected void wordIsMissingFromDictionary() {
-            //Для каждого слушателя
-            for (PlayerActionListener listener : _listener) {
-                //Cоздаём действие
-                PlayerActionEvent event = new PlayerActionEvent(this);
-
-                //Присоединяем действие к метке
-                event.setPlayer(this);
-
-                //Оповещаем
-                listener.wordIsMissingFromDictionary(event);
-            }
-        }
-
-        // Оповещает слушателей о событии о использованом ранее слове
-        protected void wordIsAlreadyUsed() {
-            //Для каждого слушателя
-            for (PlayerActionListener listener : _listener) {
-                //Cоздаём действие
-                PlayerActionEvent event = new PlayerActionEvent(this);
-
-                //Присоединяем действие к метке
-                event.setPlayer(this);
-
-                //Оповещаем
-                listener.wordIsAlreadyUsed(event);
-            }
+            //Оповещаем
+            listener.letterAddOnGameField(event);
         }
     }
+
+    // Оповещает слушателей о событии не добавлении буквы на поле
+    protected void letterIsNotAddOnGameField() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
+
+            //Присоединяем действие к метке
+            event.setPlayer(this);
+
+            //Оповещаем
+            listener.letterIsNotAddOnGameField(event);
+        }
+    }
+
+    // Оповещает слушателей о событии о добавлении буквы к слову
+    protected void cellAddInWord() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
+
+            //Присоединяем действие к метке
+            event.setPlayer(this);
+
+            //Оповещаем
+            listener.cellAddInWord(event);
+        }
+    }
+
+    // Оповещает слушателей о событии о невозможности добавления буквы к слову
+    protected void cellNotAddInWord() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
+
+            //Присоединяем действие к метке
+            event.setPlayer(this);
+
+            //Оповещаем
+            listener.cellNotAddInWord(event);
+        }
+    }
+
+    // Оповещает слушателей о событии о удалении буквы из слова
+    protected void cellRemoveInWord() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
+
+            //Присоединяем действие к метке
+            event.setPlayer(this);
+
+            //Оповещаем
+            listener.cellRemoveInWord(event);
+        }
+    }
+
+    // Оповещает слушателей о событии о завершении хода игрока
+    protected void playerFinishHisStep() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
+
+            //Присоединяем действие к метке
+            event.setPlayer(this);
+
+            //Оповещаем
+            listener.playerFinishHisStep(event);
+        }
+    }
+
+    // Оповещает слушателей о событии об отсутствии слова в словаре
+    protected void wordIsMissingFromDictionary() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
+
+            //Присоединяем действие к метке
+            event.setPlayer(this);
+
+            //Оповещаем
+            listener.wordIsMissingFromDictionary(event);
+        }
+    }
+
+    // Оповещает слушателей о событии о использованом ранее слове
+    protected void wordIsAlreadyUsed() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
+
+            //Присоединяем действие к метке
+            event.setPlayer(this);
+
+            //Оповещаем
+            listener.wordIsAlreadyUsed(event);
+        }
+    }
+}

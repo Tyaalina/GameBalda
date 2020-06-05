@@ -1,4 +1,5 @@
 package MyGame;
+
 import MyEvents.GameFieldEvent;
 import MyEvents.GameFieldListener;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import java.awt.Point;
 
 /**
- *  Квадратное поле, состоящее из клеток
+ * Квадратное поле, состоящее из клеток
  */
 public class GameField {
 
@@ -16,25 +17,25 @@ public class GameField {
 // [1, n] соответсвенно
 
     // ------------------------------ Клетки ---------------------------------------
-    private ArrayList<Cell> _cellPool = new ArrayList();
+    private ArrayList<Cell> _cellPool = new ArrayList<>();
 
-    public ArrayList<Cell> getCellPool(){
+    public ArrayList<Cell> getCellPool() {
         return _cellPool;
     }
 
     //Получить клетку по позиции
-    public Cell getCell(Point pos){
+    public Cell getCell(Point pos) {
 
-        for(Cell obj : _cellPool)
-        {
-            if(obj.getPosition().equals(pos))
-            { return obj; }
+        for (Cell obj : _cellPool) {
+            if (obj.getPosition().equals(pos)) {
+                return obj;
+            }
         }
 
         return null;
     }
 
-    public void setCell(Point pos, @NotNull Cell cell){
+    public void setCell(Point pos, @NotNull Cell cell) {
         // Удаляем старую клетку
         removeCell(pos);
 
@@ -46,44 +47,43 @@ public class GameField {
         _cellPool.add(cell);
     }
 
-    public void clear(){
+    public void clear() {
         _cellPool.clear();
     }
 
-    private void removeCell(Point pos){
+    private void removeCell(Point pos) {
 
         Cell obj = getCell(pos);
-        if(obj != null)
+        if (obj != null)
             _cellPool.remove(obj);
     }
 
-    public void activateAllCells(){
-        for (Cell cell:_cellPool){
+    public void activateAllCells() {
+        for (Cell cell : _cellPool) {
             cell.activate();
         }
     }
 
-    public void disableAllCells(){
-        for (Cell cell:_cellPool){
+    public void disableAllCells() {
+        for (Cell cell : _cellPool) {
             cell.disable();
         }
     }
 
-    public boolean isFull(){
+    public boolean isFull() {
         int full = 0;
 
-        for(Cell cell:_cellPool){
-            if(!cell.isEmpty()){
+        for (Cell cell : _cellPool) {
+            if (!cell.isEmpty()) {
                 full++;
             }
         }
 
-        if (full == _cellPool.size()){
+        if (full == _cellPool.size()) {
             //Генерируем событие
             gameFieldIsFull();
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -99,17 +99,15 @@ public class GameField {
 
         // Удаляем все клетки находящиеся вне поля
         int countCell = _cellPool.size();
-        for (int i=0; i< countCell; i++)
-        {
-            if(!containsRange(_cellPool.get(i).getPosition()) )
-            {
+        for (int i = 0; i < countCell; i++) {
+            if (!containsRange(_cellPool.get(i).getPosition())) {
                 _cellPool.remove(_cellPool.get(i));
             }
         }
 
     }
 
-    public int getSize(){
+    public int getSize() {
         return _height;
     }
 
@@ -121,9 +119,9 @@ public class GameField {
         return _height;
     }
 
-    public boolean containsRange(@NotNull Point p){
+    public boolean containsRange(@NotNull Point p) {
         return p.getX() >= 1 && p.getX() <= _width &&
-                p.getY() >= 1 && p.getY() <= _height ;
+                p.getY() >= 1 && p.getY() <= _height;
     }
 
     // ----------------------------------------------------------------------------
@@ -133,9 +131,9 @@ public class GameField {
     }
 
     // ----------------------- Список с формируемым словом ------------------------------
-    private ArrayList<Cell> _word = new ArrayList();
+    private ArrayList<Cell> _word = new ArrayList<>();
 
-    public void addCellToWord (@NotNull Cell cell){
+    public void addCellToWord(@NotNull Cell cell) {
         //Если в клетке есть буква
         if (cell.getStatus() == Status.BUSY) {
 
@@ -146,95 +144,87 @@ public class GameField {
             }
 
             //Если есть хотя бы один занятой сосед
-            if(cell.busyNeighbor() || cell.activeNeighbor()) {
+            if (cell.busyNeighbor() || cell.activeNeighbor()) {
                 //Добавляем слово к списку
                 addCellToWordList(cell);
 
                 //Генерируем событие
                 addCellToWord();
-            }
-            else {
+            } else {
                 //Генерируем событие
                 notAddCellToWord();
             }
-        }
-        else
-            if (cell.getStatus() == Status.ACTIVE)
-        {
+        } else if (cell.getStatus() == Status.ACTIVE) {
             //Удалить клетку из слова
             deletedCellFromWord(cell);
 
             //Генерируем событие
             removeCellFromWord();
+        } else {
+            //Генерируем событие
+            notAddCellToWord();
         }
-        else
-            {
-                //Генерируем событие
-                notAddCellToWord();
-            }
     }
 
-    private void addCellToWordList (Cell cell){
+    private void addCellToWordList(Cell cell) {
         if (!_word.contains(cell)) {
             cell.activate();
             _word.add(cell);
         }
     }
 
-    private void deletedCellFromWord (Cell cell){
+    private void deletedCellFromWord(Cell cell) {
         int indexOfDeletedCells = _word.indexOf(cell);
-        for(int i =_word.size()-1; i >= indexOfDeletedCells; i--)
-        {
+        for (int i = _word.size() - 1; i >= indexOfDeletedCells; i--) {
             _word.get(i).disable();
             _word.remove(i);
         }
     }
 
-    public void deletedWord(){
-        for (Cell cell: _word){
+    public void deletedWord() {
+        for (Cell cell : _word) {
             cell.disable();
         }
         _word.clear();
     }
 
-    public ArrayList<Cell> getAllActiveCell(){
+    public ArrayList<Cell> getAllActiveCell() {
         return _word;
     }
 
-    public String getWord(){
-        String word = "";
-        int lenght = _word.size();
+    public String getWord() {
+        StringBuilder word = new StringBuilder();
+        int length = _word.size();
 
-        for (int i=0; i < lenght; i++){
-            word = word + _word.get(i).getLetter().ToString();
+        for (Cell cell : _word) {
+            word.append(cell.getLetter().ToString());
         }
 
-        return word;
+        return word.toString();
     }
 
     // ----------------------- Установка слова ------------------------------
-    public void setWord(@NotNull String word){
-        ArrayList <String> _letters = new ArrayList<String>();
+    public void setWord(@NotNull String word) {
+        ArrayList<String> _letters = new ArrayList<>();
 
-        for (int i= 0; word.length() > i; i++){
+        for (int i = 0; word.length() > i; i++) {
             _letters.add(Character.toString(word.charAt(i)));
         }
 
         int size = this.getSize();
 
-        for(int i = 0; i < size; i++){
-            int tmp = size*(size / 2)+i;
-            _cellPool.get(size*(size / 2)+i).setLetter(new Letter(_letters.get(i)));
+        for (int i = 0; i < size; i++) {
+            _cellPool.get(size * (size / 2) + i).setLetterAtStartWord(new Letter(_letters.get(i)));
         }
 
-        for(int i = 0; i < size; i++){
-            this.addCellToWord(_cellPool.get(size*(size / 2)+i));
+        for (int i = 0; i < size; i++) {
+            this.addCellToWord(_cellPool.get(size * (size / 2) + i));
         }
     }
 
     // ---------------------- Порождает события -----------------------------
 
-    private ArrayList <GameFieldListener> _listener = new ArrayList<GameFieldListener>();
+    private ArrayList<GameFieldListener> _listener = new ArrayList<>();
 
     // Присоединяет слушателя
     public void addGameFieldListener(GameFieldListener l) {
@@ -258,16 +248,16 @@ public class GameField {
         }
     }
 
-        // Оповещает слушателей о событии активации буквы
-        protected void removeCellFromWord() {
-            //Для каждого слушателя
-            for (GameFieldListener listener : _listener) {
-                //Cоздаём действие
-                GameFieldEvent event = new GameFieldEvent(this);
+    // Оповещает слушателей о событии активации буквы
+    protected void removeCellFromWord() {
+        //Для каждого слушателя
+        for (GameFieldListener listener : _listener) {
+            //Cоздаём действие
+            GameFieldEvent event = new GameFieldEvent(this);
 
-                //Оповещаем
-                listener.removeCellFromWord(event);
-            }
+            //Оповещаем
+            listener.removeCellFromWord(event);
+        }
     }
 
     // Оповещает слушателей о событии активации буквы

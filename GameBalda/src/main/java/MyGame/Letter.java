@@ -6,33 +6,32 @@ public class Letter {
     private Cell _cell;
     private String _symbol;
 
-    public Letter(String symbol){
+    public Letter(String symbol) {
         _symbol = symbol;
     }
 
-    public Letter(String symbol, Cell cell){
+    public Letter(String symbol, Cell cell) {
 
         _symbol = symbol;
         _cell = cell;
     }
 
-    public String ToString(){
+    public String ToString() {
         return _symbol;
     }
 
-    public void setCell(Cell cell){
+    public void setCell(Cell cell) {
         _cell = cell;
     }
 
-    public Cell getCell(){
+    public Cell getCell() {
         return _cell;
     }
 
-    public boolean equal(Letter letter){
-        if(this._symbol == letter._symbol){
+    public boolean equal(Letter letter) {
+        if (this._symbol == letter._symbol) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
