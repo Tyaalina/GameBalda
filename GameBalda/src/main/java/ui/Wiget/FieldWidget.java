@@ -34,4 +34,10 @@ public class FieldWidget extends JPanel{
         EmptyBorder border = new EmptyBorder(0, 10, 5, 10);
         setBorder(border);
     }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        repaint();
+    }
 }
