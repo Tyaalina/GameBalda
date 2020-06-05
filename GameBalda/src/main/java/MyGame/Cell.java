@@ -1,4 +1,5 @@
 package MyGame;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Point;
@@ -12,26 +13,26 @@ public class Cell {
 
     }
 
-    public Cell(Status status){
+    public Cell(Status status) {
         this._status = status;
     }
 
-    public Cell(@NotNull Point pos){
+    public Cell(@NotNull Point pos) {
 
         this._position = pos;
     }
 
-    public Cell (Letter letter){
+    public Cell(Letter letter) {
         this._letter = letter;
         _status = Status.BUSY;
     }
 
-    public Cell(GameField field){
+    public Cell(GameField field) {
         this._field = field;
     }
     // --------------------- Позиция буквы -----------------------
 
-    public void setPosition(Point pos){
+    public void setPosition(Point pos) {
         this._position = pos;
     }
 
@@ -39,35 +40,34 @@ public class Cell {
         return this._position;
     }
 
-    public boolean equal(@NotNull Cell cell){
-            return  (this._position == null && cell._position == null) || ((this._position != null) && (cell._position != null) &&
-                    (this._position.x == cell._position.x) && (this._position.y == cell._position.y));
+    public boolean equal(@NotNull Cell cell) {
+        return (this._position == null && cell._position == null) || ((this._position != null) && (cell._position != null) &&
+                (this._position.x == cell._position.x) && (this._position.y == cell._position.y));
     }
 
     // --------------------- Статус буквы -----------------------
     private Status _status;
 
-    public void setStatus(Status stat){
+    public void setStatus(Status stat) {
         this._status = stat;
     }
 
-    public Status getStatus(){
+    public Status getStatus() {
         return this._status;
     }
 
-    public boolean activate(){
-        if(getStatus() == Status.BUSY){
+    public boolean activate() {
+        if (getStatus() == Status.BUSY) {
             setStatus(Status.ACTIVE);
             return true;
         }
         return false;
     }
 
-    public void disable(){
-        if (this.isEmpty()){
+    public void disable() {
+        if (this.isEmpty()) {
             setStatus(Status.FREE);
-        }
-        else
+        } else
             setStatus(Status.BUSY);
     }
 
@@ -78,20 +78,22 @@ public class Cell {
         this.neighborCells.add(cell);
     }
 
-    public ArrayList<Cell> getNeighbor(){return this.neighborCells;}
+    public ArrayList<Cell> getNeighbor() {
+        return this.neighborCells;
+    }
 
-    public boolean activeNeighbor(){
-        for (Cell cell : neighborCells){
-            if(cell.getStatus() == Status.ACTIVE){
+    public boolean activeNeighbor() {
+        for (Cell cell : neighborCells) {
+            if (cell.getStatus() == Status.ACTIVE) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean busyNeighbor(){
-        for (Cell cell : neighborCells){
-            if(cell.getStatus() == Status.BUSY){
+    public boolean busyNeighbor() {
+        for (Cell cell : neighborCells) {
+            if (cell.getStatus() == Status.BUSY) {
                 return true;
             }
         }
@@ -101,25 +103,27 @@ public class Cell {
     // --------- Буква, принадлежит полю. Принадлежность задает само поле ------
     private GameField _field;
 
-    public void setGameField(GameField f){
+    public void setGameField(GameField f) {
         this._field = f;
     }
 
-    public GameField getGameField(){return this._field;}
+    public GameField getGameField() {
+        return this._field;
+    }
 
     // --------------------- Буква, принадлежащая клетке -----------------------
     Letter _letter;
 
-    public Letter getLetter(){
+    public Letter getLetter() {
         return this._letter;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this._letter == null;
     }
 
-    public boolean setLetter(Letter letter) {
-        if( letter != null) {
+    public boolean setLetterAtStartWord(Letter letter){
+        if (letter != null) {
             if (this.getStatus() == Status.FREE) {
                 letter.setCell(this);
                 _letter = letter;
@@ -128,7 +132,26 @@ public class Cell {
                 return true;
             }
         }
-        else {
+        return false;
+    }
+
+    public boolean setLetter(Letter letter) {
+        if (letter != null) {
+            if (this.getStatus() == Status.FREE) {
+                boolean status = false;
+                for (Cell neighbour : this.getNeighbor()){
+                    status = status || ((neighbour.getStatus() == Status.BUSY) || (neighbour.getStatus() == Status.ACTIVE));
+                }
+                if (status) {
+                    letter.setCell(this);
+                    _letter = letter;
+                    _status = Status.BUSY;
+
+                    return true;
+                }
+                else return false;
+            }
+        } else {
             _letter = null;
             return false;
         }
