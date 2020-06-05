@@ -87,6 +87,10 @@ public class Player {
             //Удаляем слово
             if (activeCell.size() != 0) {
                 _gameModel.getGameField().deletedWord();
+            }
+
+            //Очищаем клетку с предыдущей буквой
+            if (_сellWithSettingLetter.getPosition() != null){
                 _gameModel.getGameField().getCell(getCellWithSettingLetter().getPosition()).setLetter(null);
                 _gameModel.getGameField().getCell(getCellWithSettingLetter().getPosition()).setStatus(Status.FREE);
             }
