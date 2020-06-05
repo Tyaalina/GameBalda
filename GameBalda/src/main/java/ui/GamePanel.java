@@ -1,11 +1,10 @@
 package ui;
 
-import MyGame.GameField;
 import MyGame.GameModel;
 import org.jetbrains.annotations.NotNull;
-import ui.Wiget.AlphabetWiget;
-import ui.Wiget.FieldWiget;
-import ui.Wiget.ScopeWiget;
+import ui.Wiget.AlphabetWidget;
+import ui.Wiget.FieldWidget;
+import ui.Wiget.ScopeWidget;
 import ui.Wiget.UsedWordsWidget;
 
 import javax.swing.*;
@@ -15,25 +14,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel {
-    private final GameField field;
     private final GameModel game;
 
-    private AlphabetWiget alphabetWiget = new AlphabetWiget();
-    private ScopeWiget scopeWiget;
-    private FieldWiget fieldWiget;
+    private AlphabetWidget alphabetWidget;
+    private ScopeWidget scopeWidget;
+    private FieldWidget fieldWidget;
     private UsedWordsWidget usedWordsWidget;
 
-    public GamePanel(GameField field, GameModel game) {
+    public GamePanel(GameModel game) {
         super();
         this.game = game;
-
-        this.setName("Балда");
-
-        this.field = game.getGameField();
-
-        scopeWiget = new ScopeWiget(game);
+        
+        scopeWidget = new ScopeWidget(game);
         usedWordsWidget = new UsedWordsWidget(game);
-        fieldWiget = new FieldWiget(field);
+        fieldWidget = new FieldWidget(game);
+        alphabetWidget = new AlphabetWidget(game);
 
         //распологаем
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -46,7 +41,7 @@ public class GamePanel extends JPanel {
     JButton finishedWordButton;
 
     private void fillField() {
-        add(scopeWiget.getScopeWiget());
+        add(scopeWidget);
 
         //Создаём панель c игровым полем
         JPanel gamePanel = new JPanel();
@@ -61,12 +56,12 @@ public class GamePanel extends JPanel {
 
         constraints.gridx = 0;      // первая ячейка таблицы по горизонтали
         constraints.gridy   = 0  ;  // нулевая ячейка таблицы по вертикали
-        gamePanel.add(fieldWiget.getFieldWiget(),constraints);
+        gamePanel.add(fieldWidget,constraints);
 
         constraints.gridx = 1;      // нулевая ячейка таблицы по горизонтали
         constraints.gridy   = 0  ;  // нулевая ячейка таблицы по вертикали
         constraints.gridwidth = 2;    // размер ячейки в две ячейки
-        gamePanel.add(usedWordsWidget.getUseWordWidget(),constraints);
+        gamePanel.add(usedWordsWidget,constraints);
 
         add(gamePanel);
 
@@ -93,7 +88,7 @@ public class GamePanel extends JPanel {
 
         add(buttonWidget);
 
-        add(alphabetWiget.getAlphabetWidget());
+        add(alphabetWidget);
     }
 
     // --------------------------- Реагируем на события ------------------------------
@@ -104,7 +99,6 @@ public class GamePanel extends JPanel {
                 game.start();
                 finishedWordButton.setEnabled(true);
                 startButton.setEnabled(false);
-
             }
             else if (e.getActionCommand().equals("finish word")){
 

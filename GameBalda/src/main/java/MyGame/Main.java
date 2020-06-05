@@ -26,7 +26,7 @@ public class Main {
 
             JPanel content = (JPanel) this.getContentPane();
             content.removeAll();
-            content.add(new ui.GamePanel(game.getGameField(), game));
+            content.add(new ui.GamePanel(game));
 
             pack();
             setResizable(false);

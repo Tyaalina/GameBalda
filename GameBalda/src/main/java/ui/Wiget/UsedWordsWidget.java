@@ -5,21 +5,19 @@ import MyGame.GameModel;
 import javax.swing.*;
 import java.awt.*;
 
-public class UsedWordsWidget {
-    JPanel useWordWidget;
+public class UsedWordsWidget extends JPanel{
     private final GameModel game;
 
     public  UsedWordsWidget(GameModel game){
         this.game = game;
-        //Создаём панель
-        JPanel _useWordPanel = new JPanel();
-        _useWordPanel.setLayout(new BoxLayout(_useWordPanel, BoxLayout.Y_AXIS));
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         //Разремер поля без кнопок
-        _useWordPanel.setPreferredSize(new Dimension(100, 300));
+        setPreferredSize(new Dimension(100, 300));
 
         JLabel titelUsingWord = new JLabel("Список использованных слов: ");
         titelUsingWord.setAlignmentX(Component.CENTER_ALIGNMENT);
-        _useWordPanel.add(titelUsingWord);
+        add(titelUsingWord);
 
         //Создаём панель для игроков и их слов
         JPanel playersWidget = new JPanel();
@@ -40,7 +38,7 @@ public class UsedWordsWidget {
         JPanel secondPlayerWidget = new JPanel();
         secondPlayerWidget.setLayout(new BoxLayout(secondPlayerWidget, BoxLayout.Y_AXIS));
 
-        JLabel secondPlayer = new JLabel(this.game.getPlayerList().get(0).getName()+":");
+        JLabel secondPlayer = new JLabel(this.game.getPlayerList().get(1).getName()+":");
         secondPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
         secondPlayerWidget.add(secondPlayer);
 
@@ -58,12 +56,7 @@ public class UsedWordsWidget {
         playersWidget.add(firstPlayerWidget);
         playersWidget.add(secondPlayerWidget);
 
-        _useWordPanel.add(playersWidget);
-
-        useWordWidget = _useWordPanel;
+        add(playersWidget);
     }
 
-    public JPanel getUseWordWidget(){
-        return useWordWidget;
-    }
 }
