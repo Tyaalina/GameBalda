@@ -44,7 +44,7 @@ public class UsedWordsWidget extends JPanel{
         secondPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
         secondPlayerWidget.add(secondPlayer);
 
-        ListOfUsedWord usedWordOfSecondPlayer = new ListOfUsedWord(game,game.getPlayerList().get(0));
+        ListOfUsedWord usedWordOfSecondPlayer = new ListOfUsedWord(game,game.getPlayerList().get(1));
         secondPlayerWidget.add(usedWordOfSecondPlayer);
 
         playersWidget.add(firstPlayerWidget);
