@@ -20,19 +20,15 @@ public class Player {
 
     public Player(String name) {
         _name = name;
-        _rating.getRating().put(this, 0);
     }
 
     // ----------------------- Устанавливаем связь с полем -----------------------
     GameField _field;
-    AchievementsList _rating = new AchievementsList();
 
     public Player(GameField field, String name) {
         _field = field;
         _name = name;
-        _rating.getRating().put(this, 0);
         _field.addGameFieldListener(new PlayerObserverGameField());
-        _rating.addAchievementsListListener(new PlayerObserverAchievementsListListener());
     }
 
     // ----------------------- Устанавливаем связь с игрой -----------------------
@@ -125,12 +121,8 @@ public class Player {
 
     public void completeWord() {
         if (_gameModel.getGameField().getAllActiveCell().contains(_сellWithSettingLetter)) {
-            _rating.addWordInAchievementsList(_gameModel.getGameField().getWord(), this);
+            _gameModel.getGameRating().addWordInAchievementsList(_gameModel.getGameField().getWord(), this);
         }
-    }
-
-    public AchievementsList getRatingOfActivePlayer() {
-        return _rating;
     }
 
     // ------------------------- Реагируем на действия поля ------------------
@@ -157,29 +149,6 @@ public class Player {
 
         @Override
         public void gameFieldIsFull(GameFieldEvent e) {
-
-        }
-    }
-
-    // ------------------------- Реагируем на действия листа достижений ------------------
-
-    private class PlayerObserverAchievementsListListener implements AchievementsListListener {
-        @Override
-        public void wordNotInDictionary(AchievementsListEvent e) {
-            // Генерируем событие
-            wordIsMissingFromDictionary();
-        }
-
-        @Override
-        public void wordAlreadyUsed(AchievementsListEvent e) {
-            // Генерируем событие
-            wordIsAlreadyUsed();
-        }
-
-        @Override
-        public void wordAddInAchievementsList(AchievementsListEvent e) {
-            // Генерируем событие
-            playerFinishHisStep();
 
         }
     }
@@ -285,51 +254,6 @@ public class Player {
 
             //Оповещаем
             listener.cellRemoveInWord(event);
-        }
-    }
-
-    // Оповещает слушателей о событии о завершении хода игрока
-    protected void playerFinishHisStep() {
-        //Для каждого слушателя
-        for (PlayerActionListener listener : _listener) {
-            //Cоздаём действие
-            PlayerActionEvent event = new PlayerActionEvent(this);
-
-            //Присоединяем действие к метке
-            event.setPlayer(this);
-
-            //Оповещаем
-            listener.playerFinishHisStep(event);
-        }
-    }
-
-    // Оповещает слушателей о событии об отсутствии слова в словаре
-    protected void wordIsMissingFromDictionary() {
-        //Для каждого слушателя
-        for (PlayerActionListener listener : _listener) {
-            //Cоздаём действие
-            PlayerActionEvent event = new PlayerActionEvent(this);
-
-            //Присоединяем действие к метке
-            event.setPlayer(this);
-
-            //Оповещаем
-            listener.wordIsMissingFromDictionary(event);
-        }
-    }
-
-    // Оповещает слушателей о событии о использованом ранее слове
-    protected void wordIsAlreadyUsed() {
-        //Для каждого слушателя
-        for (PlayerActionListener listener : _listener) {
-            //Cоздаём действие
-            PlayerActionEvent event = new PlayerActionEvent(this);
-
-            //Присоединяем действие к метке
-            event.setPlayer(this);
-
-            //Оповещаем
-            listener.wordIsAlreadyUsed(event);
         }
     }
 }
