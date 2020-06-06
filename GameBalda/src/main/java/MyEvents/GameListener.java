@@ -9,4 +9,5 @@ public interface GameListener extends EventListener {
 
      void wordNotFromDictionary(GameEvent e);
      void wordIsAlreadyUsedOnField(GameEvent e);
+     void wordIsNotContainNewLetter(GameEvent e);
 }

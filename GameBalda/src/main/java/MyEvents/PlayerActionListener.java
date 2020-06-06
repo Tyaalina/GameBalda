@@ -16,4 +16,6 @@ public interface PlayerActionListener extends EventListener{
     void cellNotAddInWord(PlayerActionEvent e);
 
     void cellRemoveInWord(PlayerActionEvent e);
+
+    void cellWithSettingLetterInWord(PlayerActionEvent e);
 }
