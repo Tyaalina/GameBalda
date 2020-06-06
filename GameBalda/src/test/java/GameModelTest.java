@@ -45,6 +45,11 @@ public class GameModelTest {
         public void wordIsAlreadyUsedOnField(GameEvent e) {
 
         }
+
+        @Override
+        public void wordIsNotContainNewLetter(GameEvent e) {
+
+        }
     }
     GameModel game = new GameModel();
 
@@ -221,6 +226,68 @@ public class GameModelTest {
 
         assertEquals(events, expectedEvents);
         assert(game.getGameRating().getUsedWord().size() == 2);
+    }
+
+    @Test
+    public void test_Player_threeStepsOfPlayer(){
+        game.start();
+
+        game.getGameField().getCellPool().get(0).setLetterAtStartWord(new Letter("к"));
+        game.getGameField().getCellPool().get(1).setLetterAtStartWord(new Letter("о"));
+
+        //Выбираем букву
+        game.getActivePlayer().chooseLetter(new Letter("т"));
+
+        //уставаливаем её
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(2));
+
+        //Формируем слово
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(0));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(1));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(2));
+
+        //Завершить формирование слова
+        game.getActivePlayer().completeWord();
+        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
+
+        //Выбираем букву
+        game.getActivePlayer().chooseLetter(new Letter("к"));
+
+        //уставаливаем её
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(6));
+
+        //Формируем слово
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(2));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(1));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(6));
+
+        //Завершить формирование слова
+        game.getActivePlayer().completeWord();
+        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
+
+        //Выбираем букву
+        game.getActivePlayer().chooseLetter(new Letter("о"));
+
+        //уставаливаем её
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(5));
+
+        //Формируем слово
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(0));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(5));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(6));
+
+        //Завершить формирование слова
+        game.getActivePlayer().completeWord();
+        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
+
+        assertEquals(events, expectedEvents);
+        assert(game.getGameRating().getUsedWord().size() == 4);
     }
 
     @Test

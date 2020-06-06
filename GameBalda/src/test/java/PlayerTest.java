@@ -50,6 +50,11 @@ public class PlayerTest {
         public void cellRemoveInWord(PlayerActionEvent e) {
             events.add(EVENT.CELL_REMOVE_IN_WORD);
         }
+
+        @Override
+        public void cellWithSettingLetterInWord(PlayerActionEvent e) {
+
+        }
     }
 
     GameModel game = new GameModel();
