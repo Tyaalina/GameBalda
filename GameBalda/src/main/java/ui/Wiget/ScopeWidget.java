@@ -2,6 +2,7 @@ package ui.Wiget;
 
 import MyGame.GameModel;
 import MyGame.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class ScopeWidget extends JPanel{
 
         add(scrope);
 
-        JLabel activePlayer = new JLabel("Активный игрок: "+ this.game.getActivePlayer().getName());
+        JLabel activePlayer = new JLabel("Активный игрок: "+ game.getActivePlayer().getName());
         activePlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         EmptyBorder borderActivePlayer = new EmptyBorder(5, 0, 10, 0);
@@ -36,6 +37,11 @@ public class ScopeWidget extends JPanel{
     }
 
     private @NotNull String createScopePlayer(@NotNull Player player){
-        return Integer.toString(player.getRatingOfActivePlayer().getRating().get(player));
+        return "d";//Integer.toString(player.getRatingOfActivePlayer().getRating().get(player));
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
     }
 }
