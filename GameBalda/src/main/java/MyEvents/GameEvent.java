@@ -11,7 +11,7 @@ public class GameEvent extends EventObject {
         _player = p;
     }
 
-    public Player player(){
+    public Player getPlayer(){
         return _player;
     }
 
