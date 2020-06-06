@@ -14,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PlayerTest {
     private enum EVENT {LETTER_IS_ACTIVE, LETTER_ADD_ON_FIELD, LETTER_IS_NOT_ADD_ON_FIELD, CELL_ADD_IN_WORD,
-                        CELL_NOT_ADD_IN_WORD, CELL_REMOVE_IN_WORD, PLAYER_FINISHED_HIS_STEPS, WORD_IS_MISSING_FROM_DICTIONARY,
-                        WORD_IS_ALREADY_USED}
+                        CELL_NOT_ADD_IN_WORD, CELL_REMOVE_IN_WORD}
 
     private java.util.List<EVENT> events = new ArrayList<>();
     private List<EVENT> expectedEvents = new ArrayList<>();
@@ -50,21 +49,6 @@ public class PlayerTest {
         @Override
         public void cellRemoveInWord(PlayerActionEvent e) {
             events.add(EVENT.CELL_REMOVE_IN_WORD);
-        }
-
-        @Override
-        public void playerFinishHisStep(PlayerActionEvent e) {
-            events.add(EVENT.PLAYER_FINISHED_HIS_STEPS);
-        }
-
-        @Override
-        public void wordIsMissingFromDictionary(PlayerActionEvent e) {
-            events.add(EVENT.WORD_IS_MISSING_FROM_DICTIONARY);
-        }
-
-        @Override
-        public void wordIsAlreadyUsed(PlayerActionEvent e) {
-            events.add(EVENT.WORD_IS_ALREADY_USED);
         }
     }
 
@@ -394,6 +378,7 @@ public class PlayerTest {
     @Test
     public void test_Player_completeWord(){
         player.setGame(game);
+        game.getGameRating().getRating().put(player,0);
 
         player.chooseLetter(new Letter("о"));
         expectedEvents.add(EVENT.LETTER_IS_ACTIVE);
@@ -478,9 +463,8 @@ public class PlayerTest {
 
         //Завершить формирование слова
         player.completeWord();
-        expectedEvents.add(EVENT.PLAYER_FINISHED_HIS_STEPS);
 
-        assert(player.getRatingOfActivePlayer().getRating().get(player) == 3);
+        assert(game.getGameRating().getRating().get(player) == 3);
         assertEquals(events, expectedEvents);
     }
 
@@ -555,7 +539,7 @@ public class PlayerTest {
 
         game.getGameField().setSize(3);
 
-        player.getRatingOfActivePlayer().getUsedWord().put("кот",player);
+        game.getGameRating().getUsedWord().put("кот",player);
 
         //Устанавливаем букву
         player.chooseCell(cell4);
@@ -573,7 +557,6 @@ public class PlayerTest {
 
         //Завершить формирование слова
         player.completeWord();
-        expectedEvents.add(EVENT.WORD_IS_ALREADY_USED);
 
         assertEquals(events, expectedEvents);
     }
@@ -665,7 +648,6 @@ public class PlayerTest {
 
         //Завершить формирование слова
         player.completeWord();
-        expectedEvents.add(EVENT.WORD_IS_MISSING_FROM_DICTIONARY);
 
         assertEquals(events, expectedEvents);
     }

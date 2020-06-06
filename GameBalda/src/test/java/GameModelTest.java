@@ -35,6 +35,16 @@ public class GameModelTest {
         public void deadHeat(GameEvent e) {
             events.add(EVENT.DEAD_HEAT);
         }
+
+        @Override
+        public void wordNotFromDictionary(GameEvent e) {
+
+        }
+
+        @Override
+        public void wordIsAlreadyUsedOnField(GameEvent e) {
+
+        }
     }
     GameModel game = new GameModel();
 
@@ -58,8 +68,6 @@ public class GameModelTest {
     public void test_Player_start_CellPool(){
         game.start();
 
-        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
-
         assert(game.getGameField().getCellPool().size() == 25);
         assertEquals(events, expectedEvents);
     }
@@ -67,8 +75,6 @@ public class GameModelTest {
     @Test
     public void test_Player_start_CellNeighbour(){
         game.start();
-
-        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
 
         assert(game.getGameField().getCellPool().get(0).getNeighbor().size() == 2);
         assert(game.getGameField().getCellPool().get(1).getNeighbor().size() == 3);
@@ -105,7 +111,6 @@ public class GameModelTest {
     @Test
     public void test_Player_start_word(){
         game.start();
-        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
 
         Letter letter;
         String word = "";
@@ -129,8 +134,6 @@ public class GameModelTest {
     public void test_Player_start_cellsWithWord(){
         game.start();
 
-        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
-
         assert(!game.getGameField().getCellPool().get(10).isEmpty());
         assert(!game.getGameField().getCellPool().get(11).isEmpty());
         assert(!game.getGameField().getCellPool().get(12).isEmpty());
@@ -144,8 +147,6 @@ public class GameModelTest {
     public void test_Player_start_activePlayer(){
         game.start();
 
-        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
-
         assert(game.getActivePlayer() != null);
 
         assertEquals(events, expectedEvents);
@@ -154,8 +155,6 @@ public class GameModelTest {
     @Test
     public void test_Player_playerExchanged(){
         game.start();
-
-        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
 
         game.getGameField().getCellPool().get(0).setLetterAtStartWord(new Letter("к"));
         game.getGameField().getCellPool().get(1).setLetterAtStartWord(new Letter("о"));
@@ -181,10 +180,80 @@ public class GameModelTest {
     }
 
     @Test
-    public void test_Player_finishWithWiner(){
+    public void test_Player_wordIsAlreadyUsed(){
         game.start();
 
+        game.getGameField().getCellPool().get(0).setLetterAtStartWord(new Letter("к"));
+        game.getGameField().getCellPool().get(1).setLetterAtStartWord(new Letter("о"));
+
+        //Выбираем букву
+        game.getActivePlayer().chooseLetter(new Letter("т"));
+
+        //уставаливаем её
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(2));
+
+        //Формируем слово
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(0));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(1));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(2));
+
+        //Завершить формирование слова
+        game.getActivePlayer().completeWord();
         expectedEvents.add(EVENT.PLAYER_EXCHANGED);
+
+        //Выбираем букву
+        game.getActivePlayer().chooseLetter(new Letter("т"));
+
+        //уставаливаем её
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(6));
+
+        //Формируем слово
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(0));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(1));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(6));
+
+        //Завершить формирование слова
+        game.getActivePlayer().completeWord();
+
+        assertEquals(events, expectedEvents);
+        assert(game.getGameRating().getUsedWord().size() == 2);
+    }
+
+    @Test
+    public void test_Player_wordIsAlreadyUsedOnStart(){
+        game.start();
+
+        game.getGameField().getCellPool().get(0).setLetterAtStartWord(new Letter("к"));
+        game.getGameField().getCellPool().get(1).setLetterAtStartWord(new Letter("о"));
+
+        //Выбираем букву
+        game.getActivePlayer().chooseLetter(new Letter("т"));
+
+        //уставаливаем её
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(2));
+
+        //Формируем слово
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(0));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(1));
+
+        game.getActivePlayer().chooseCell(game.getGameField().getCellPool().get(2));
+
+        //Завершить формирование слова
+        game.getActivePlayer().completeWord();
+        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
+
+        assertEquals(events, expectedEvents);
+        assert(game.getGameRating().getUsedWord().size() == 2);
+    }
+
+    @Test
+    public void test_Player_finishWithWiner(){
+        game.start();
 
         game.getGameField().getCellPool().get(0).setLetterAtStartWord(new Letter("к"));
         game.getGameField().getCellPool().get(1).setLetterAtStartWord(new Letter("о"));
@@ -237,8 +306,6 @@ public class GameModelTest {
     @Test
     public void test_Player_finishWithDeadHeat(){
         game.start();
-
-        expectedEvents.add(EVENT.PLAYER_EXCHANGED);
 
         game.getGameRating().getRating().put(game.getPlayerList().get(1),3);
 
