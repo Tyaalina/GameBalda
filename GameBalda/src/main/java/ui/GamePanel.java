@@ -1,17 +1,23 @@
 package ui;
 
+import MyEvents.GameEvent;
+import MyEvents.GameListener;
 import MyGame.GameModel;
 import org.jetbrains.annotations.NotNull;
 import ui.Wiget.AlphabetWidget;
 import ui.Wiget.FieldWidget;
 import ui.Wiget.ScopeWidget;
 import ui.Wiget.UsedWordsWidget;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.PLAIN_MESSAGE;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 public class GamePanel extends JPanel {
     private final GameModel game;
@@ -29,6 +35,9 @@ public class GamePanel extends JPanel {
         usedWordsWidget = new UsedWordsWidget(game);
         fieldWidget = new FieldWidget(game);
         alphabetWidget = new AlphabetWidget(game);
+
+        //Подписываемся на события
+        game.addGameListener(new EventsListener());
 
         //распологаем
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -91,6 +100,21 @@ public class GamePanel extends JPanel {
         add(alphabetWidget);
     }
 
+    private void informationAboutWordInDictionary(){
+        final String MESSAGE_TITLE = "УПС! Ошибка!";
+        showMessageDialog(this, "Такого слова в словаре нет!", MESSAGE_TITLE, ERROR_MESSAGE);
+    }
+
+    private void informationAboutWordAlreadyUsed(){
+        final String MESSAGE_TITLE = "УПС! Ошибка!";
+        showMessageDialog(this, "Это слово уже кто-то использовал! Нужно новое!", MESSAGE_TITLE, ERROR_MESSAGE);
+    }
+
+    private void informationAboutChangePlayer(){
+        final String MESSAGE_TITLE = "Поздравляем!";
+        showMessageDialog(this, "Слово составлено верно! Ход следующего игрока.", MESSAGE_TITLE, PLAIN_MESSAGE);
+    }
+
     // --------------------------- Реагируем на события ------------------------------
     private class ClickListener implements ActionListener {
         @Override
@@ -101,9 +125,36 @@ public class GamePanel extends JPanel {
                 startButton.setEnabled(false);
             }
             else if (e.getActionCommand().equals("finish word")){
-
+                game.getActivePlayer().completeWord();
             }
         }
     }
 
+    private class EventsListener implements GameListener {
+
+        @Override
+        public void gameFinished(GameEvent e) {
+
+        }
+
+        @Override
+        public void playerExchanged(GameEvent e) {
+            informationAboutChangePlayer();
+        }
+
+        @Override
+        public void deadHeat(GameEvent e) {
+
+        }
+
+        @Override
+        public void wordNotFromDictionary(GameEvent e) {
+            informationAboutWordInDictionary();
+        }
+
+        @Override
+        public void wordIsAlreadyUsedOnField(GameEvent e) {
+            informationAboutWordAlreadyUsed();
+        }
+    }
 }
