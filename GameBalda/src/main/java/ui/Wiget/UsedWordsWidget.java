@@ -24,7 +24,6 @@ public class UsedWordsWidget extends JPanel{
         //Как отображ
         playersWidget.setLayout(new GridLayout(1, 2, 20, 0));
 
-        JLabel usingWord = new JLabel();
 
         //Создаём панель для первого игрока
         JPanel firstPlayerWidget = new JPanel();
@@ -34,6 +33,9 @@ public class UsedWordsWidget extends JPanel{
         firstPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
         firstPlayerWidget.add(firstPlayer);
 
+        ListOfUsedWord usedWordOfFirstPlayer = new ListOfUsedWord(game,game.getPlayerList().get(0));
+        firstPlayerWidget.add(usedWordOfFirstPlayer);
+
         //Создаём панель для второго игрока
         JPanel secondPlayerWidget = new JPanel();
         secondPlayerWidget.setLayout(new BoxLayout(secondPlayerWidget, BoxLayout.Y_AXIS));
@@ -42,16 +44,8 @@ public class UsedWordsWidget extends JPanel{
         secondPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
         secondPlayerWidget.add(secondPlayer);
 
-        for(String words: this.game.getGameRating().getUsedWord().keySet()){
-            usingWord.setText(words);
-            if(this.game.getGameRating().getUsedWord().get(words) == this.game.getPlayerList().get(0)){
-                firstPlayerWidget.add(usingWord);
-            }
-            else
-            {
-                secondPlayerWidget.add(usingWord);
-            }
-        }
+        ListOfUsedWord usedWordOfSecondPlayer = new ListOfUsedWord(game,game.getPlayerList().get(0));
+        secondPlayerWidget.add(usedWordOfSecondPlayer);
 
         playersWidget.add(firstPlayerWidget);
         playersWidget.add(secondPlayerWidget);
@@ -59,4 +53,9 @@ public class UsedWordsWidget extends JPanel{
         add(playersWidget);
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        repaint();
+    }
 }
