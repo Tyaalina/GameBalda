@@ -3,6 +3,7 @@ package ui;
 import MyEvents.GameEvent;
 import MyEvents.GameListener;
 import MyGame.GameModel;
+import MyGame.Player;
 import org.jetbrains.annotations.NotNull;
 import ui.Wiget.AlphabetWidget;
 import ui.Wiget.FieldWidget;
@@ -110,9 +111,24 @@ public class GamePanel extends JPanel {
         showMessageDialog(this, "Это слово уже кто-то использовал! Нужно новое!", MESSAGE_TITLE, ERROR_MESSAGE);
     }
 
+    private void informationAboutNotUsedNewLetterInWord(){
+        final String MESSAGE_TITLE = "УПС! Ошибка!";
+        showMessageDialog(this, "Слово составлено без установленной тобой буквы! Её нужно использовать!", MESSAGE_TITLE, ERROR_MESSAGE);
+    }
+
     private void informationAboutChangePlayer(){
         final String MESSAGE_TITLE = "Поздравляем!";
         showMessageDialog(this, "Слово составлено верно! Ход следующего игрока.", MESSAGE_TITLE, PLAIN_MESSAGE);
+    }
+
+    private void informationAboutGameFinish(@NotNull Player winner){
+        final String MESSAGE_TITLE = "Поздравляем!";
+        showMessageDialog(this, "Игра окончена! Победил "+ winner.getName(), MESSAGE_TITLE, PLAIN_MESSAGE);
+    }
+
+    private void informationAboutGameFinishWithDeadHeat(){
+        final String MESSAGE_TITLE = "Поздравляем! Ничья";
+        showMessageDialog(this, "Игра окончена! Победила дружба!", MESSAGE_TITLE, PLAIN_MESSAGE);
     }
 
     // --------------------------- Реагируем на события ------------------------------
@@ -133,8 +149,8 @@ public class GamePanel extends JPanel {
     private class EventsListener implements GameListener {
 
         @Override
-        public void gameFinished(GameEvent e) {
-
+        public void gameFinished(@NotNull GameEvent e) {
+            informationAboutGameFinish(e.getPlayer());
         }
 
         @Override
@@ -144,7 +160,7 @@ public class GamePanel extends JPanel {
 
         @Override
         public void deadHeat(GameEvent e) {
-
+            informationAboutGameFinishWithDeadHeat();
         }
 
         @Override
@@ -155,6 +171,11 @@ public class GamePanel extends JPanel {
         @Override
         public void wordIsAlreadyUsedOnField(GameEvent e) {
             informationAboutWordAlreadyUsed();
+        }
+
+        @Override
+        public void wordIsNotContainNewLetter(GameEvent e) {
+            informationAboutNotUsedNewLetterInWord();
         }
     }
 }
