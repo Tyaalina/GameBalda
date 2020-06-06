@@ -155,6 +155,8 @@ public class GameModel {
             this.getGameField().disableAllCells();
             this.getGameField().deletedWord();
 
+            _playerList.get(_activePlayer).getCellWithSettingLetter().setPosition(null);
+
             // Генерируем событие
             playerExchanged(getActivePlayer());
         }
@@ -214,6 +216,13 @@ public class GameModel {
         @Override
         public void cellRemoveInWord(PlayerActionEvent e) {
 
+        }
+
+        @Override
+        public void cellWithSettingLetterInWord(PlayerActionEvent e) {
+            //Генерируем событие
+            wordIsNotContainNewLetter();
+            gameField.deletedWord();
         }
 
         @Override
@@ -324,5 +333,12 @@ public class GameModel {
         }
     }
 
+    // Оповещает слушателей о событии не использования новой буквы в формируемом слове
+    protected void wordIsNotContainNewLetter() {
 
+        GameEvent event = new GameEvent(this);
+        for (Object listner : _listenerList) {
+            ((GameListener) listner).wordIsNotContainNewLetter(event);
+        }
+    }
 }

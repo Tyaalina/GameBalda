@@ -65,12 +65,17 @@ public class Player {
     // ----------------------- Выбор клетки -----------------------
     Cell _сellWithSettingLetter = new Cell();
 
-    private void setСellWithSettingLetter(Cell c) {
-        _сellWithSettingLetter = c;
+    private void setСellWithSettingLetter(@NotNull Cell c) {
+        _сellWithSettingLetter.setPosition(c.getPosition());
     }
 
     public Cell getCellWithSettingLetter() {
         return this._сellWithSettingLetter;
+    }
+
+    public void removeCellWithSettingLetter() {
+        _gameModel.getGameField().getCell(getCellWithSettingLetter().getPosition()).setLetter(null);
+        _gameModel.getGameField().getCell(getCellWithSettingLetter().getPosition()).setStatus(Status.FREE);
     }
 
     public void chooseCell(@NotNull Cell cell) {
@@ -87,8 +92,7 @@ public class Player {
 
             //Очищаем клетку с предыдущей буквой
             if (_сellWithSettingLetter.getPosition() != null){
-                _gameModel.getGameField().getCell(getCellWithSettingLetter().getPosition()).setLetter(null);
-                _gameModel.getGameField().getCell(getCellWithSettingLetter().getPosition()).setStatus(Status.FREE);
+                removeCellWithSettingLetter();
             }
 
             //Если буква установлена
@@ -120,8 +124,12 @@ public class Player {
     // ----------------------- Завершить формирование слова -----------------
 
     public void completeWord() {
-        if (_gameModel.getGameField().getAllActiveCell().contains(_сellWithSettingLetter)) {
+        if (_gameModel.getGameField().getAllActiveCell().contains(_gameModel.getGameField().getCell(_сellWithSettingLetter.getPosition()))) {
             _gameModel.getGameRating().addWordInAchievementsList(_gameModel.getGameField().getWord(), this);
+        }
+        else {
+            //Генерируем событие
+            cellWithSettingLetterInWord();
         }
     }
 
@@ -254,6 +262,18 @@ public class Player {
 
             //Оповещаем
             listener.cellRemoveInWord(event);
+        }
+    }
+
+    // Оповещает слушателей о событии о отсутствия установленной буквы в слово
+    protected void cellWithSettingLetterInWord() {
+        //Для каждого слушателя
+        for (PlayerActionListener listener : _listener) {
+            //Cоздаём действие
+            PlayerActionEvent event = new PlayerActionEvent(this);
+
+            //Оповещаем
+            listener.cellWithSettingLetterInWord(event);
         }
     }
 }
