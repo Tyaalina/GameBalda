@@ -51,6 +51,7 @@ public class GameModel {
         PlayerAndFieldObserver observer = new PlayerAndFieldObserver();
         //Создаём игровой счёт
         _rating = new AchievementsList();
+        _rating.addAchievementsListListener(new PlayerObserverAchievementsListListener());
 
         //Создаём алфавит
         alphabet = new Alphabet();
@@ -136,9 +137,11 @@ public class GameModel {
         _rating.addUsedWord(startWord, defaultPlayer);
 
         // Передаем ход первому игроку
-        _activePlayer = _playerList.size() - 1;
+        _activePlayer = 0;
 
-        exchangePlayer();
+        //Деактивируем клетки на поле
+        this.getGameField().disableAllCells();
+        this.getGameField().deletedWord();
     }
 
     private void exchangePlayer() {
@@ -156,8 +159,30 @@ public class GameModel {
             playerExchanged(getActivePlayer());
         }
     }
+    // ------------------------- Реагируем на действия листа достижений ------------------
 
-    // ------------------------- Реагируем на действия игрока и поля------------------
+    private class PlayerObserverAchievementsListListener implements AchievementsListListener {
+        @Override
+        public void wordNotInDictionary(AchievementsListEvent e) {
+            //Генерируем событие
+            wordNotFromDictionary();
+            gameField.deletedWord();
+        }
+
+        @Override
+        public void wordAlreadyUsed(AchievementsListEvent e) {
+            //Генерируем событие
+            wordIsAlreadyUsedOnField();
+            gameField.deletedWord();
+        }
+
+        @Override
+        public void wordAddInAchievementsList(AchievementsListEvent e) {
+            exchangePlayer();
+        }
+    }
+
+        // ------------------------- Реагируем на действия игрока и поля------------------
 
     private class PlayerAndFieldObserver implements PlayerActionListener, GameFieldListener {
 
@@ -188,22 +213,6 @@ public class GameModel {
 
         @Override
         public void cellRemoveInWord(PlayerActionEvent e) {
-
-        }
-
-        @Override
-        public void playerFinishHisStep(PlayerActionEvent e) {
-            _rating.getRating().put(_playerList.get(_activePlayer), _playerList.get(_activePlayer).getRatingOfActivePlayer().getRating().get(_playerList.get(_activePlayer)));
-            exchangePlayer();
-        }
-
-        @Override
-        public void wordIsMissingFromDictionary(PlayerActionEvent e) {
-
-        }
-
-        @Override
-        public void wordIsAlreadyUsed(PlayerActionEvent e) {
 
         }
 
@@ -294,6 +303,24 @@ public class GameModel {
         event.setPlayer(p);
         for (Object listner : _listenerList) {
             ((GameListener) listner).playerExchanged(event);
+        }
+    }
+
+    // Оповещает слушателей о событии отсутствии слова в словаре
+    protected void wordNotFromDictionary() {
+
+        GameEvent event = new GameEvent(this);
+        for (Object listner : _listenerList) {
+            ((GameListener) listner).wordNotFromDictionary(event);
+        }
+    }
+
+    // Оповещает слушателей о событии использовании уже использованного слова
+    protected void wordIsAlreadyUsedOnField() {
+
+        GameEvent event = new GameEvent(this);
+        for (Object listner : _listenerList) {
+            ((GameListener) listner).wordIsAlreadyUsedOnField(event);
         }
     }
 
