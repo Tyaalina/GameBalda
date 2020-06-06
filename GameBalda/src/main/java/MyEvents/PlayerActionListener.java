@@ -16,10 +16,4 @@ public interface PlayerActionListener extends EventListener{
     void cellNotAddInWord(PlayerActionEvent e);
 
     void cellRemoveInWord(PlayerActionEvent e);
-
-    void playerFinishHisStep(PlayerActionEvent e);
-
-    void wordIsMissingFromDictionary(PlayerActionEvent e);
-
-    void wordIsAlreadyUsed(PlayerActionEvent e);
 }
